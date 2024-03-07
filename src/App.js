@@ -1,16 +1,16 @@
+// src/App.js
 import React from 'react';
-import logo from './trivia.png';
-import './App.css';
+import { Route, Switch } from 'react-router-dom';
+import Login from './pages/Login/index';
 
-export default function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={ logo } className="App-logo" alt="logo" />
-        <p>
-          SUA VEZ
-        </p>
-      </header>
+    <div>
+      <Switch>
+        <Route path="/login" component={Login} />
+      </Switch>
     </div>
   );
-}
+};
+
+export default App;

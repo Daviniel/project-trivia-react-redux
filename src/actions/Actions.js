@@ -4,5 +4,10 @@ export const addTodo = (text) => ({
     payload: { text },
 });
   
+export const setPlayerInfo = (name, email) => ({
+    type: 'SET_PLAYER_INFO',
+    payload: { name, email },
+});
+
   // Adicione outras ações conforme necessário
   
