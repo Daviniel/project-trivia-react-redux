@@ -1,14 +1,14 @@
 // src/App.js
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Login from './pages/Login/index';
 
 const App = () => {
   return (
     <div>
-      <Switch>
+      <Routes>
         <Route path="/login" component={Login} />
-      </Switch>
+      </Routes>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 // src/components/Login.js
 import React from 'react';
 import { connect } from 'react-redux';
-import { setPlayerInfo } from '../redux/actions';
+import { setPlayerInfo } from '../../actions/Actions';
 
 const Login = ({ player, setPlayerInfo }) => {
   const handleNameChange = (e) => {
