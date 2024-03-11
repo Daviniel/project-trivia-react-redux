@@ -1,8 +1,8 @@
-// src/components/Login.js
 import React from 'react';
 import { connect } from 'react-redux';
 import { setPlayerInfo } from '../../actions/Actions';
-import PlayButton from '../../components/playButton';
+import  PlayButton  from '../../components/PlayButton';
+
 
 const Login = ({ player, setPlayerInfo }) => {
   const handleNameChange = (e) => {
@@ -13,7 +13,7 @@ const Login = ({ player, setPlayerInfo }) => {
     setPlayerInfo(player.name, e.target.value);
   };
 
-  const isPlayButtonDisabled = !player.name || !player.email;
+  const isPlayButtonDisabled = !player.name.trim() || !player.email.trim();
 
   return (
     <div>
@@ -35,13 +35,6 @@ const Login = ({ player, setPlayerInfo }) => {
 
       <PlayButton disabled={isPlayButtonDisabled} />
 
-      <button
-        disabled={isPlayButtonDisabled}
-        data-testid="btn-play"
-        onClick={() => console.log('Play button clicked')}
-      >
-        Play
-      </button>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Login from './pages/Login/index';
-import PlayButton from './components/playButton';
+import PlayButton from './components/PlayButton';
 
 const App = () => {
   return (
