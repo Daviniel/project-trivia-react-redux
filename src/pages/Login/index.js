@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { setPlayerInfo } from '../../actions/Actions';
+import PlayButton from '../../components/playButton';
 
 const Login = ({ player, setPlayerInfo }) => {
   const handleNameChange = (e) => {
@@ -31,6 +32,8 @@ const Login = ({ player, setPlayerInfo }) => {
         onChange={handleEmailChange}
         data-testid="input-gravatar-email"
       />
+
+      <PlayButton disabled={isPlayButtonDisabled} />
 
       <button
         disabled={isPlayButtonDisabled}
