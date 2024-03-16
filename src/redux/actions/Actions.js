@@ -4,9 +4,10 @@ export const addTodo = (text) => ({
     payload: { text },
 });
   
-export const setPlayerInfo = (name, email) => ({
-    type: 'SET_PLAYER_INFO',
-    payload: { name, email },
+export const setPlayerInfo = (playerName, playerEmail) => ({
+    type: PLAYER_REDUCER,
+    playerName,
+    playerEmail,
 });
 
   // Adicione outras ações conforme necessário

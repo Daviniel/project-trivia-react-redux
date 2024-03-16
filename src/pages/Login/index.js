@@ -1,45 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setPlayerInfo } from '../../redux/actions/Actions';
-import  PlayButton  from '../../components/PlayButton';
+import PlayButton from '../../components/PlayButton';
 
-
-const Login = () => {
-
-  this.state = {
-    playerName: '',
-    disabledButton: true
-  }
+const Login = ({ setPlayerInfo, fetchApiTokenRedux, clearUserInformations }) => {
+  const [playerName, setPlayerName] = useState('');
+  const [playerEmail, setPlayerEmail] = useState('');
+  const [disabledButton, setDisabledButton] = useState(true);
 
   const handleNameChange = (e) => {
-    setPlayerInfo(e.target.value, player.email);
+    setPlayerName(e.target.value);
   };
-
-  componentDiMount() {
-    const { fetchApiTokenRedux, clearUserInformations } = this.props;
-    fetchApiTokenRedux();
-    clearUserInformations();
-  }
 
   const handleEmailChange = (e) => {
-    setPlayerInfo(player.name, e.target.value);
+    setPlayerEmail(e.target.value);
   };
 
-  validateEmailAndNameFilds = () => {
-    const { playerEmail, playerName } = this.state;
+  useEffect(() => {
+    fetchApiTokenRedux();
+    clearUserInformations();
+  }, [fetchApiTokenRedux, clearUserInformations]);
+
+  useEffect(() => {
+    validateEmailAndNameFields();
+  }, [playerName, playerEmail]);
+
+  const validateEmailAndNameFields = () => {
     if (playerEmail.length !== 0 && playerName.length !== 0) {
-      this.setState({ disabledButton: false });
+      setDisabledButton(false);
     } else {
-      this.setState({ disabledButton: true });
+      setDisabledButton(true);
     }
-  }
-  
+  };
+
   return (
     <div>
       <label>Name:</label>
       <input
         type="text"
-        value={player.name}
+        value={playerName}
         onChange={handleNameChange}
         data-testid="input-player-name"
       />
@@ -47,30 +46,24 @@ const Login = () => {
       <label>Email:</label>
       <input
         type="email"
-        value={player.email}
+        value={playerEmail}
         onChange={handleEmailChange}
         data-testid="input-gravatar-email"
       />
 
-      <PlayButton 
-        buttonDisable={ disabledButton } 
-        onClickEvent = { () => {
-            playerActionRedux(playerName, playerEmail)
-          }
-          
-        }
-      
+      <PlayButton
+        buttonDisable={disabledButton}
+        onClickEvent={() => {
+          setPlayerInfoRedux(playerName, playerEmail);
+        }}
       />
-
     </div>
   );
 };
 
 const mapDispatchToProps = (dispatch) => ({
   fetchApiTokenRedux: () => dispatch(fetchApiToken()),
-  playerActionRedux: (playerName, playerEmail) => dispatch(
-    playerAction(playerName, playerEmail),
-  ),
+  setPlayerInfoRedux: (playerName, playerEmail) => dispatch(setPlayerInfo(playerName, playerEmail)),
   clearUserInformations: () => dispatch(resetLoggedUserInformations()),
 });
 
