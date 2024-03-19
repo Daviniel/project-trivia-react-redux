@@ -1,5 +1,6 @@
+// src/pages/Login/index.jsx
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom'; // Certifique-se de que o Redirect está sendo importado corretamente
 import { useDispatch } from 'react-redux';
 import { userEmail, userLogin } from '../../redux/actions/Actions'; // Importe as ações corretamente
 import fetchToken from '../../services/api';
@@ -15,8 +16,8 @@ export default function Login() {
     const sessionToken = await fetchToken();
     localStorage.setItem('token', sessionToken.token);
     setRedirect(true);
-    dispatch(userEmail((email)));
-    dispatch(userLogin((name)));
+    dispatch(userEmail(email));
+    dispatch(userLogin(name));
   };
 
   return (
@@ -34,13 +35,13 @@ export default function Login() {
         </label>
         <label htmlFor="playerName">
           Player:
-        <input
-          id="playerName"
-          type="text"
-          value={ name }
-          onChange={ (event) => setName(event.target.value) }
-          data-testid="input-player-name"
-        />
+          <input
+            id="playerName"
+            type="text"
+            value={ name }
+            onChange={ (event) => setName(event.target.value) }
+            data-testid="input-player-name"
+          />
         </label>
         <button
           id='play'
@@ -51,7 +52,7 @@ export default function Login() {
           Jogar
         </button>
         <Link data-testid="btn-settings" to="/Settings">Configurações</Link>
-        {redirect ? <Redirect to="/game" /> : null}
+        {redirect && <Redirect to="/game" />} {/* Certifique-se de que Redirect está sendo usado corretamente */}
       </form>
     </div>
   );
