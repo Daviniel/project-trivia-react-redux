@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Login from './pages/Login/index';
-import Game from '../src/pages/Game/index';
+import Game from './pages/Game/index';
 
 const App = () => {
   return (
