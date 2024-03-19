@@ -52,7 +52,7 @@ export default function Login() {
           Jogar
         </button>
         <Link data-testid="btn-settings" to="/Settings">Configurações</Link>
-        {redirect && <Redirect to="/game" />} {/* Certifique-se de que Redirect está sendo usado corretamente */}
+        {redirect ? <Redirect to="/game" />: null} {/* Certifique-se de que Redirect está sendo usado corretamente */}
       </form>
     </div>
   );
