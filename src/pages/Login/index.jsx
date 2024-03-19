@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { userEmail, userLogin } from '../../redux/actions/Actions'; // Importe as ações corretamente
+import fetchToken from '../../services/api';
 
-const Login = () => {
-
+export default function Login() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [redirect, setRedirect] = useState(false);
@@ -15,7 +18,6 @@ const Login = () => {
     dispatch(userEmail((email)));
     dispatch(userLogin((name)));
   };
-
 
   return (
     <div>
@@ -53,7 +55,4 @@ const Login = () => {
       </form>
     </div>
   );
-};
-
-
-export default (Login);
+}
