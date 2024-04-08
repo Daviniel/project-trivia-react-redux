@@ -1,59 +1,121 @@
-// src/pages/Login/index.jsx
-import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom'; // Certifique-se de que o Redirect está sendo importado corretamente
-import { useDispatch } from 'react-redux';
-import { userEmail, userLogin } from '../../redux/actions/Actions'; // Importe as ações corretamente
-import fetchToken from '../../services/api';
+import React, { Component } from 'react';
+import { BrowserRouter, Route, Redirect, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import GenericButton from '../components/GenericButton';
+import LabelAndInput from '../components/LabelAndInput';
+import {
+  fetchApiToken,
+  playerAction,
+  resetLoggedUserInformations,
+} from '../redux/actions';
+import Settings from './Settings';
 
-export default function Login() {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [redirect, setRedirect] = useState(false);
-  const dispatch = useDispatch();
+class Login extends Component {
+  constructor() {
+    super();
 
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
-    const sessionToken = await fetchToken();
-    localStorage.setItem('token', sessionToken.token);
-    setRedirect(true);
-    dispatch(userEmail(email));
-    dispatch(userLogin(name));
-  };
+    this.state = {
+      playerEmail: '',
+      playerName: '',
+      disabledButton: true,
+      redirectToSettings: false,
+    };
+  }
 
-  return (
-    <div>
-      <form onSubmit={ handleSubmit }>
-        <label htmlFor="userEmail">
-          Email:
-          <input
-            id="userEmail"
-            type="email"
-            value={ email }
-            onChange={ (event) => setEmail(event.target.value) }
-            data-testid="input-gravatar-email"
+  componentDidMount() {
+    const { fetchApiTokenRedux, clearUserInformations } = this.props;
+    fetchApiTokenRedux();
+    clearUserInformations();
+  }
+
+  handleInput = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value }, () => {
+      this.validateEmailAndNameFields();
+    });
+  }
+
+  validateEmailAndNameFields = () => {
+    const { playerEmail, playerName } = this.state;
+    if (playerEmail.length !== 0 && playerName.length !== 0) {
+      this.setState({ disabledButton: false });
+    } else {
+      this.setState({ disabledButton: true });
+    }
+  }
+
+  redirectToSettingsBtn = () => {
+    this.setState({ redirectToSettings: true });
+  }
+
+  render() {
+    const {
+      playerEmail,
+      playerName,
+      disabledButton,
+      redirectToSettings,
+    } = this.state;
+    const {
+      playerActionRedux,
+    } = this.props;
+    return (
+      <section>
+        <BrowserRouter>
+          <Route path="/settings" component={ Settings } />
+        </BrowserRouter>
+        {redirectToSettings && <Redirect to="/settings" />}
+        <LabelAndInput
+          labelContent="Email do Gravatar"
+          inputId="input-player-email"
+          inputType="text"
+          nameInput="playerEmail"
+          inputValue={ playerEmail }
+          onChangeEvent={ this.handleInput }
+          inputDataTestid="input-gravatar-email"
+        />
+        <br />
+        <LabelAndInput
+          labelContent="Nome do Jogador"
+          inputId="input-player-name"
+          inputType="text"
+          nameInput="playerName"
+          inputValue={ playerName }
+          onChangeEvent={ this.handleInput }
+          inputDataTestid="input-player-name"
+        />
+        <br />
+        <Link to="/questions">
+          <GenericButton
+            buttonContent="Play"
+            buttonDisabled={ disabledButton }
+            buttonDataTestid="btn-play"
+            onClickEvent={ () => {
+              playerActionRedux(playerName, playerEmail);
+            } }
           />
-        </label>
-        <label htmlFor="playerName">
-          Player:
-          <input
-            id="playerName"
-            type="text"
-            value={ name }
-            onChange={ (event) => setName(event.target.value) }
-            data-testid="input-player-name"
-          />
-        </label>
-        <button
-          id='play'
-          disabled={ email.length === 0 || name.length === 0 }
-          type="submit"
-          data-testid="btn-play"
-        >
-          Jogar
-        </button>
-        <Link data-testid="btn-settings" to="/Settings">Configurações</Link>
-        {redirect ? <Redirect to="/game" />: null} {/* Certifique-se de que Redirect está sendo usado corretamente */}
-      </form>
-    </div>
-  );
+        </Link>
+        <GenericButton
+          buttonContent="Settings"
+          buttonDisabled={ false }
+          buttonDataTestid="btn-settings"
+          onClickEvent={ this.redirectToSettingsBtn }
+        />
+      </section>
+    );
+  }
 }
+
+Login.propTypes = {
+  fetchAPIRedux: PropTypes.func,
+}.isRequired;
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchApiTokenRedux: () => dispatch(fetchApiToken()),
+  playerActionRedux: (playerName, playerEmail) => dispatch(
+    playerAction(playerName, playerEmail),
+  ),
+  clearUserInformations: () => dispatch(resetLoggedUserInformations()),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
