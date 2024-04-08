@@ -1,32 +1,70 @@
+export const PLAYER_REDUCER = 'PLAYER_REDUCER';
+export const GET_TOKEN = 'GET_TOKEN';
+export const GET_QUESTIONS = 'GET_QUESTIONS';
+export const SAVE_POINTS = 'SAVE_POINTS';
+export const SAVE_PLAYER_ASSERTIONS = 'SAVE_PLAYER_ASSERTIONS';
+export const CLEAR_USER_INFORMATIONS = 'CLEAR_USER_INFORMATIONS';
 
-export const addTodo = (text) => ({
-    type: 'ADD_TODO',
-    payload: { text },
-  });
-  
+export const savePlayerPoints = (payload) => ({
+  type: SAVE_POINTS,
+  payload,
+});
 
- // Importações de constantes
-import { USER_EMAIL, USER_LOGIN } from '../reducers/index';
+export const savePlayerAssertions = (playerAssertions) => ({
+  type: SAVE_PLAYER_ASSERTIONS,
+  playerAssertions,
+});
 
-export function userEmail(email) {
-  return {
-    type: USER_EMAIL,
-    payload: email,
-  };
-}
+export const playerAction = (playerName, playerEmail) => ({
+  type: PLAYER_REDUCER,
+  playerName,
+  playerEmail,
+});
 
-export function userLogin(user) {
-  return {
-    type: USER_LOGIN,
-    payload: user,
-  };
-}
+const saveTokenInRedux = (token) => ({
+  type: GET_TOKEN,
+  token,
+});
 
-export function nameAction(payload) {
-  return {
-    type: NAME,
-    payload,
-  };
-}
+const saveQuestionsInRedux = (data) => ({
+  type: GET_QUESTIONS,
+  questions: data,
+});
 
-export default { USER_EMAIL, USER_LOGIN };
+export const fetchApiToken = () => async (dispatch) => {
+  try {
+    const URL = 'https://opentdb.com/api_token.php?command=request';
+    const response = await fetch(URL);
+    const data = await response.json();
+    dispatch(saveTokenInRedux(data.token));
+    // console.log('token: ', data.token);
+  } catch (error) {
+    console.log('ERROR REQUEST "fetchApiToken" :', error);
+  }
+};
+
+export const fetchApiOfQuestions = (token) => async (dispatch) => {
+  try {
+    let urlApiQuestion = `https://opentdb.com/api.php?amount=5&token=${token}`;
+    let responceQuestions = await fetch(urlApiQuestion);
+    let dataQuestions = await responceQuestions.json();
+    // console.log('dataQuestions ANTES: ', dataQuestions);
+    if (dataQuestions.results.length === 0) {
+      const URL = 'https://opentdb.com/api_token.php?command=request';
+      const response = await fetch(URL);
+      const dataToken = await response.json();
+      // console.log('dataToken: ', dataToken);
+      urlApiQuestion = `https://opentdb.com/api.php?amount=5&token=${dataToken.token}`;
+      responceQuestions = await fetch(urlApiQuestion);
+      dataQuestions = await responceQuestions.json();
+    }
+    // console.log('dataQuestions DEPOIS: ', dataQuestions);
+    dispatch(saveQuestionsInRedux(dataQuestions.results));
+  } catch (error) {
+    console.log('ERROR REQUEST "fetchApiOfQuestions" :', error);
+  }
+};
+
+export const resetLoggedUserInformations = () => ({
+  type: CLEAR_USER_INFORMATIONS,
+});
